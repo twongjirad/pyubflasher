@@ -1,4 +1,5 @@
 import argparse
+import os,sys
 from pyubflasher.flasherboard import FlasherBoard
 
 class BoardMenuAction( argparse.Action ):
@@ -41,3 +42,25 @@ class DisplayRegisterAction( argparse.Action ):
         board.queryRegister( chid )
         setattr(namespace,self.dest,values)
 
+
+class SetPortName( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(SetPortName,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.changePortName( values[0] )
+
+class RestorePortDefault( argparse.Action ):
+    def __init__(self, option_strings, nargs=0, dest=None, **kwargs ):
+        super(RestorePortDefault,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        mypath = os.path.dirname(os.path.realpath(__file__))
+        config_file = mypath+"/config/currentconfig.json"
+        os.system("cp %s/config/boardconfig.json %s"%(mypath,config_file))        
+
+class PrintPortName( argparse.Action ):
+    def __init__(self, option_strings, nargs=0, dest=None, **kwargs ):
+        super(PrintPortName,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        print "Port Name: ",board.config.port

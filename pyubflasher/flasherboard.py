@@ -42,10 +42,12 @@ channel_register_map = {
 }    
 
 class FlasherBoard:
-    def __init__( self, config_file="__default__" ):
-        if config_file=="__default__":
+    def __init__( self, config_file="__current__" ):
+        if config_file=="__current__":
             mypath = os.path.dirname(os.path.realpath(__file__))
-            config_file = mypath+"/config/boardconfig.json"
+            config_file = mypath+"/config/currentconfig.json"
+            if not os.path.exists(config_file):
+                os.system("cp %s/config/boardconfig.json %s"%(mypath,config_file))
         self.config = self.loadConfig( config_file  ) 
         self.port = None
         
@@ -119,3 +121,8 @@ class FlasherBoard:
         for ich in keys:
             print "[ CH %d, %s ] %d (0x%s)" % ( ich, channel_register_map[ich], adcs[ich]["adc"], adcs[ich]["hex"] )
         #print "-----------------------------------------"
+
+    def changePortName(self,portname):
+        self.config.setPortName( portname )
+        self.config.saveCurrent()
+
