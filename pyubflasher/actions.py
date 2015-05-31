@@ -74,3 +74,11 @@ class CheckConnection( argparse.Action ):
             print "CONNECTED"
         else:
             print "DISCONNECTED"
+
+class ReloadFPGAprogram( argparse.Action ):
+    def __init__(self, option_strings, nargs=0, dest=None, **kwargs ):
+        super(ReloadFPGAprogram,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.reloadFPGAprogram()
+    

@@ -143,3 +143,10 @@ class FlasherBoard:
         except:
             return False
 
+    def reloadFPGAprogram(self):
+        self.openPort()
+        self.port.write('FF\r')
+        print "Waiting 30 seconds for reset..."
+        time.sleep(30)
+        print "Checking for connection..."
+        self.weStillConnected()

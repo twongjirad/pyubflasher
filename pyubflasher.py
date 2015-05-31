@@ -23,6 +23,8 @@ def get_parser( board ):
                          help='Set port (e.g. /dev/ttyUSB0)' )
     parser.add_argument( '--print-port',nargs=0,action=actions.PrintPortName,
                          help='Print the serial port name' )
+    parser.add_argument( '--reload-fpga', action=actions.ReloadFPGAprogram, nargs=0,
+                         help='Reload the FPGA program from copy stored on flash memory. Will wait 30 seconds before querying the device again.' )
 
     # Heart beat
     parser.add_argument( '--check-connection',nargs=0,action=actions.CheckConnection,
