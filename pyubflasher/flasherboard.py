@@ -126,3 +126,20 @@ class FlasherBoard:
         self.config.setPortName( portname )
         self.config.saveCurrent()
 
+
+    def getIDinfo(self):
+        self.openPort()
+        self.port.write('ID\r')
+        out = self.clearReadBuffer()
+        return out[1:-1]
+
+    def weStillConnected(self):
+        try:
+            idmsg = self.getIDinfo()
+            if idmsg[0].strip()=="Module Type  : Micro Boone LED Driver":
+                return True
+            else:
+                return False
+        except:
+            return False
+

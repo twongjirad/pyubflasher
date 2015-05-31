@@ -23,7 +23,10 @@ def get_parser( board ):
                          help='Set port (e.g. /dev/ttyUSB0)' )
     parser.add_argument( '--print-port',nargs=0,action=actions.PrintPortName,
                          help='Print the serial port name' )
-    
+
+    # Heart beat
+    parser.add_argument( '--check-connection',nargs=0,action=actions.CheckConnection,
+                         help='Check if we can talk to board still. If yes, returns \"CONNECTED\", otherwise \"DISCONNECTED\"' )
     return parser
 
 #def doit( args ):

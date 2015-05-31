@@ -64,3 +64,13 @@ class PrintPortName( argparse.Action ):
     def __call__(self, parse, namespace, values, option_string=None ):
         board = FlasherBoard()
         print "Port Name: ",board.config.port
+
+class CheckConnection( argparse.Action ):
+    def __init__(self, option_strings, nargs=0, dest=None, **kwargs ):
+        super(CheckConnection,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        if board.weStillConnected():
+            print "CONNECTED"
+        else:
+            print "DISCONNECTED"
