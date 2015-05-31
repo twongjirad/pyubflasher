@@ -12,6 +12,8 @@ def get_parser( board ):
                          help='Print the Board\'s help menu' )
     parser.add_argument( '--query-all-registers',action=actions.DisplayAllRegistersAction,
                          help='Print the voltage values for all 36 registers' )
+    parser.add_argument( '--query-register',action=actions.DisplayRegisterAction,nargs=1,
+                         help='Print the voltage values for all 36 registers' )
     return parser
 
 #def doit( args ):

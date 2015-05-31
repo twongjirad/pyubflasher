@@ -23,3 +23,21 @@ class DisplayAllRegistersAction( argparse.Action ):
         board.queryAllRegisters()
         setattr(namespace,self.dest,values)
 
+class DisplayRegisterAction( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(DisplayRegisterAction,self).__init__(option_strings=option_strings, 
+                                                   nargs=nargs,
+                                                   dest=dest, 
+                                                   **kwargs )
+    def __call__(self,parse,namespace,values,option_string=None):
+        board = FlasherBoard()
+        try:
+            chid = int(values[0])
+        except:
+            raise TypeError("Channel ID must be (decimal) integer. Given %s"%(values[0]))
+        if chid<0 or chid>=36:
+            raise ValueError("Channel ID must be between [0,36). Given %s"%(values[0]))
+
+        board.queryRegister( chid )
+        setattr(namespace,self.dest,values)
+
