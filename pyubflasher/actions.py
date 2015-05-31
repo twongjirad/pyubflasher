@@ -82,3 +82,34 @@ class ReloadFPGAprogram( argparse.Action ):
         board = FlasherBoard()
         board.reloadFPGAprogram()
     
+class SetAllRegisters( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(SetAllRegisters,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        adc = values[0]
+        if "0x" in adc:
+            adcval = adc.strip().split("x")[-1]
+        else:
+            adcval = int(adc)
+        board = FlasherBoard()
+        board.setAllRegisters( adcval )
+
+class SetChannelRegister( argparse.Action ):
+    def __init__(self, option_strings, nargs=2, dest=None, **kwargs ):
+        super(SetChannelRegister,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        ch = values[0]
+        if "0x" in ch:
+            chval = ch.strip().split("x")[-1]
+        else:
+            chval = int(ch)
+
+        adc = values[1]
+        if "0x" in adc:
+            adcval = adc.strip().split("x")[-1]
+        else:
+            adcval = int(adc)
+
+        board = FlasherBoard()
+        board.setChannelRegister( chval, adcval )
+    
