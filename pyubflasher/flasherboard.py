@@ -1,6 +1,7 @@
 import serial
 from pyubflasher.boardconfig import BoardConfig
 import os,sys,time
+import json
 
 channel_register_map = {
     0:"10",
@@ -96,6 +97,7 @@ class FlasherBoard:
         strhex = out[1].strip()
         val = int( strhex, 16 )
         print "[CH %d, %s ] %d (0x%s)" % ( chid, channel_register_map[chid], val, strhex )
+        return val,strhex
 
     def queryAllRegisters(self):
         self.openPort()
@@ -193,3 +195,61 @@ class FlasherBoard:
         self.openPort()
         for ich in xrange(0,self.NCHANNELS ):
             self.setChannelRegister(ich, adcval )
+
+    def saveChannelValues( self, outfile ):
+        channels = channel_register_map.keys()
+        channels.sort()
+        data_json = {"channeladcs":{}}
+        for ich in channels:
+            val,strhex = self.queryRegister(ich)
+            data_json["channeladcs"]["%d"%(ich)] = {"dec":"%d"%(val),"hex":"0x"+strhex }
+        f = open(outfile,'w')
+        json.dump( data_json, f )
+        f.close()
+        
+    def loadChannelValues( self, infile ):
+        try:
+            f = open(infile,'r')
+            data_json = json.loads( f.read() )
+        except:
+            raise RunTimeError('Could not read configuration in %s'%(infile))
+            
+        channels = channel_register_map.keys()
+        channels.sort()
+        for ich in channels:
+            decstr = data_json["channeladcs"]["%d"%(ich)]["dec"]
+            hexstr = data_json["channeladcs"]["%d"%(ich)]["hex"]
+            
+            decval = int(decstr)
+            hexval = hexstr.split("x")[-1]
+
+            self.setChannelRegister( ich, decval )
+        f.close()
+            
+    def listChannelConfigs( self ):
+        mypath = os.path.dirname(os.path.realpath(__file__))+"/config"
+        files = [ mypath+"/"+f for f in os.listdir( mypath ) ]
+        for fname in files:
+            if not os.path.isfile(fname):
+                continue
+            f = open(fname,'r')
+            data = json.loads( f.read() )
+            if "channeladcs" in data:
+                print "[CHANNEL ADC CONFIG]: ",os.path.basename(fname)
+            f.close()
+
+    def showChannelConfig( self, configfile ):
+        mypath = os.path.dirname(os.path.realpath(__file__))+"/config/"+os.path.basename(configfile)
+        if not os.path.exists(mypath):
+            raise RunTimeError("Configuration file, %s, not found (in pyubflasher/config)"%(os.path.basename(configfile)))
+        f = open(mypath,'r')
+        data = json.loads( f.read() )
+        print "[CONFGURATION FILE: %s]" % ( os.path.basename(mypath))
+
+        channels = channel_register_map.keys()
+        channels.sort()
+        
+        for ich in channels:
+            adc = int( data["channeladcs"]["%d"%(ich)]["dec"] )
+            hexstr = data["channeladcs"]["%d"%(ich)]["hex"]
+            print "[ CH %d, %s ] %d (%s)" % ( ich, channel_register_map[ich], adc, hexstr )

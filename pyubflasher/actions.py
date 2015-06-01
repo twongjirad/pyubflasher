@@ -113,3 +113,38 @@ class SetChannelRegister( argparse.Action ):
         board = FlasherBoard()
         board.setChannelRegister( chval, adcval )
     
+class SaveChannelADCs( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(SaveChannelADCs,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        mypath = os.path.dirname(os.path.realpath(__file__))
+        print "All your configurations are belong to us: in %s/config"%(mypath)
+        fname = mypath + "/config/" + os.path.basename( values[0] )
+        board = FlasherBoard()
+        board.saveChannelValues( fname )
+
+class LoadChannelADCs( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(LoadChannelADCs,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        mypath = os.path.dirname(os.path.realpath(__file__))
+        fname = mypath + "/config/" + os.path.basename( values[0] )
+        if not os.path.exists(fname):
+            raise RunTimeError("Could not find config file: needs to be in config folder %s/config"%(mypath))
+        board = FlasherBoard()
+        board.loadChannelValues( fname )
+
+class ListChannelConfigs( argparse.Action ):
+    def __init__(self, option_strings, nargs=0, dest=None, **kwargs ):
+        super(ListChannelConfigs,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.listChannelConfigs()
+
+class ShowChannelConfig( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(ShowChannelConfig,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.showChannelConfig( values[0] )
+    

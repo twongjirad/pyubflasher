@@ -32,6 +32,15 @@ def get_parser( board ):
                          help='Print the serial port name' )
     parser.add_argument( '--reload-fpga', action=actions.ReloadFPGAprogram, nargs=0,
                          help='Reload the FPGA program from copy stored on flash memory. Will wait 30 seconds before querying the device again.' )
+    parser.add_argument( '--save-channel-adcs', action=actions.SaveChannelADCs, nargs=1,
+                         help='Store channel data to file. default storage location in pyubflasher/config' ) 
+    parser.add_argument( '--load-channel-adcs', action=actions.LoadChannelADCs, nargs=1,
+                         help='Load channel data from file. file needs to be in config folder pyubflasher/config' ) 
+    parser.add_argument( '--list-channel-configs', action=actions.ListChannelConfigs, nargs=0,
+                         help='Show stored channel configurations' )
+    parser.add_argument( '--show-channel-config', action=actions.ShowChannelConfig, nargs=1,
+                         help='Print Channel ADC values stored in a configuration file' )
+    
 
     # Heart beat
     parser.add_argument( '--check-connection',nargs=0,action=actions.CheckConnection,
