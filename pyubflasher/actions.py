@@ -147,4 +147,32 @@ class ShowChannelConfig( argparse.Action ):
     def __call__(self, parse, namespace, values, option_string=None ):
         board = FlasherBoard()
         board.showChannelConfig( values[0] )
+
+class QueryTransientWidth( argparse.Action ):
+    def __init__(self, option_strings, nargs=0, dest=None, **kwargs ):
+        super(QueryTransientWidth,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.printTransientWidth()
+
+class SetTransientWidth( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(SetTransientWidth,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.setTransientWidth(values[0])
+    
+class QueryLEDTriggerDelay( argparse.Action ):
+    def __init__(self, option_strings, nargs=0, dest=None, **kwargs ):
+        super(QueryLEDTriggerDelay,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.printLEDTriggerDelay()
+
+class SetLEDTriggerDelay( argparse.Action ):
+    def __init__(self, option_strings, nargs=1, dest=None, **kwargs ):
+        super(SetLEDTriggerDelay,self).__init__(option_strings=option_strings,nargs=nargs,dest=dest,**kwargs)
+    def __call__(self, parse, namespace, values, option_string=None ):
+        board = FlasherBoard()
+        board.setLEDTriggerDelay(values[0])
     

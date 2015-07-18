@@ -253,3 +253,65 @@ class FlasherBoard:
             adc = int( data["channeladcs"]["%d"%(ich)]["dec"] )
             hexstr = data["channeladcs"]["%d"%(ich)]["hex"]
             print "[ CH %d, %s ] %d (%s)" % ( ich, channel_register_map[ich], adc, hexstr )
+            
+    def printLEDTriggerDelay(self):
+        self.openPort()
+        self.port.write('RD 7\r')
+        out = self.clearReadBuffer()
+        print out
+        delay_value = float(out[1].strip())
+        print "LED Trigger Delay (register 0x07): ",delay_value*10.0,"ns"
+
+    def printTransientWidth(self):
+        self.openPort()
+        self.port.write('RD 9\r')
+        out = self.clearReadBuffer()
+        print out
+
+    def setLEDTriggerDelay(self,arg):
+        if "0x" in arg:
+            val = arg.strip().split("x")[-1]
+        else:
+            val = int(arg)
+
+        if type(val) is int:
+            if val<0 or val>2550:
+                raise ValueError("Valid (decimal) delay is [0,2550 ns]. Given %d."%(val))
+            hexval = "%x"%(int(val/10))
+        elif type(val) is str:
+            dec = int(val,16)
+            if dec<0 or dec>255:
+                raise ValueError("Valid (hex) ADC value is [0x0, 0xFF). Given %s (decimal=%d)"%(val,dec))
+            hexval = "0x"+val
+        else:
+            raise TypeValue("ADC value must be decimal value between [0,255] or hex string between [0x0,0xFF]. Gave %s"%(type(val)))
+        
+
+        self.openPort()
+        self.port.write('WR 7 %s\r'%(hexval))
+        out = self.clearReadBuffer()
+        print out
+
+    def setTransientWidth(self,arg):
+        if "0x" in arg:
+            val = arg.strip().split("x")[-1]
+        else:
+            val = int(arg)
+
+        if type(val) is int:
+            if val<0 or val>255:
+                raise ValueError("Valid (decimal) delay is [0,255]. Given %d."%(val))
+            hexval = "%x"%(int(val))
+        elif type(val) is str:
+            dec = int(val,16)
+            if dec<0 or dec>255:
+                raise ValueError("Valid (hex) ADC value is [0x0, 0xFF). Given %s (decimal=%d)"%(val,dec))
+            hexval = "0x"+val
+        else:
+            raise TypeValue("ADC value must be decimal value between [0,255] or hex string between [0x0,0xFF]. Gave %s"%(type(val)))
+        
+
+        self.openPort()
+        self.port.write('WR 9 %s\r'%(hexval))
+        out = self.clearReadBuffer()
+        print out

@@ -40,6 +40,14 @@ def get_parser( board ):
                          help='Show stored channel configurations' )
     parser.add_argument( '--show-channel-config', action=actions.ShowChannelConfig, nargs=1,
                          help='Print Channel ADC values stored in a configuration file' )
+    parser.add_argument( '--query-transient-width', action=actions.QueryTransientWidth, nargs=0,
+                         help='Print width of transient in unknown units' )
+    parser.add_argument( '--set-transient-width', action=actions.SetTransientWidth, nargs=1,
+                         help='Set delay between input TTL and LED trigger: [0,255] ns r [0x0,0xFF]' )
+    parser.add_argument( '--query-led-trigger-delay', action=actions.QueryLEDTriggerDelay, nargs=0,
+                         help='Print delay between input TTL and LED trigger' )
+    parser.add_argument( '--set-led-trigger-delay', action=actions.SetLEDTriggerDelay, nargs=1,
+                         help='Set delay between input TTL and LED trigger: [0,2550] ns r [0x0,0xFF]' )
     
 
     # Heart beat
