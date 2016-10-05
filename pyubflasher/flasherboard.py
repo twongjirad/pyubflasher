@@ -187,7 +187,7 @@ class FlasherBoard:
         out = self.clearReadBuffer()
         if len(out)!=2:
             print out
-            raise RuntimeEror("Error Setting channel register: out[-2]")
+            raise RuntimeError("Error Setting channel register: out[-2]: %s"%(str(out)))
         else:
             print out[0].strip()
         
